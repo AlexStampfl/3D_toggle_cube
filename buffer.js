@@ -1,22 +1,9 @@
-function initBuffers(gl, mode) {
-  const positionBuffer = initPositionBuffer(gl);
-  const colorBuffer = initColorBuffer(gl);
-  const iBuffer = initIndexBuffer(gl, mode);
-
-return {
-  position: positionBuffer,
-  color: colorBuffer,
-  indices: iBuffer,
-};
-
-}
-
-export function initPositionBuffer(gl) {
+export function createPositionBuffer(gl) {
   // Create a buffer for the square's positions.
-  const pBuffer = gl.createBuffer();
+  const buffer = gl.createBuffer();
 
   // Select the positionBuffer as the one to apply buffer operations to from here out.
-  gl.bindBuffer(gl.ARRAY_BUFFER, pBuffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
   // Now create an array of positions for the square.
   const positions = [
@@ -33,11 +20,24 @@ export function initPositionBuffer(gl) {
     // Left face
     -1.0, -1.0, -1.0, -1.0, -1.0,  1.0, -1.0,  1.0,  1.0, -1.0,  1.0, -1.0,
   ];
-
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-  return pBuffer;
+  return buffer;
 }
+
+
+function initBuffers(gl, mode) {
+  const positionBuffer = createPositionBuffer(gl);
+  const colorBuffer = createColorBuffer(gl);
+  const iBuffer = createIndexBuffer(gl, mode);
+
+return {
+  position: positionBuffer,
+  color: colorBuffer,
+  indices: iBuffer,
+};
+
+}
+
 
 const scheme1 = [
   [0.0, 1.0, 1.0, 1.0], // Front face: cyan
@@ -67,23 +67,21 @@ scheme3 = [
 export const colorSchemes = { scheme1, scheme2, scheme3 };
 
 
-export function initColorBuffer(gl, colorScheme) {
+export function createColorBuffer(gl, colorScheme) {
   // Convert the array of colors into a table for all the vertices.
   let colors = [];
-  
   for (const color of colorScheme) {
     colors = colors.concat(color, color, color, color); // Repeat for each face
   }
-
   // Create and populate the color buffer
   const cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
   return cBuffer;
 }
 
-function initIndexBuffer(gl, mode) {
+
+function createIndexBuffer(gl, mode) {
   const indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   
@@ -120,4 +118,4 @@ function initIndexBuffer(gl, mode) {
   return indexBuffer;
 }
 
-export { initBuffers, initIndexBuffer };
+export { initBuffers, createIndexBuffer };

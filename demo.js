@@ -1,9 +1,9 @@
-import { initBuffers, initIndexBuffer } from "./buffer.js";
+import { initBuffers, createIndexBuffer } from "./buffer.js";
 import { drawScene } from "./draw.js";
 import { initCameraControls, updateCamera } from "./camera.js";
 import { initializeShaderProgram } from "./shader.js";
-import { initColorBuffer, colorSchemes } from "./buffer.js";
-import { initPositionBuffer } from "./buffer.js";
+import { createColorBuffer, colorSchemes } from "./buffer.js";
+import { createPositionBuffer } from "./buffer.js";
 
 let cubeRotation = 7.0;
 
@@ -36,9 +36,9 @@ function main() {
   let isPerspective = true;
   let visualizationMode = "Wireframe"; // default mode
   let buffers = {
-    position: initPositionBuffer(gl),
-    color: initColorBuffer(gl, colorSchemes.scheme1),
-    indices: initIndexBuffer(gl),
+    position: createPositionBuffer(gl),
+    color: createColorBuffer(gl, colorSchemes.scheme1),
+    indices: createIndexBuffer(gl),
   };
 
   // Set up projection toggle
@@ -52,7 +52,7 @@ function main() {
     const selectedScheme = colorSchemes[event.target.value];
     if (selectedScheme) {
       console.log(`Switching to color scheme: ${event.target.value}`);
-      buffers.color = initColorBuffer(gl, selectedScheme);
+      buffers.color = createColorBuffer(gl, selectedScheme);
       render(0, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode);
     } else {
       console.error(`Uknown color scheme: ${event.target.value}`);

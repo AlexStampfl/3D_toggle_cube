@@ -1,11 +1,11 @@
-import { initIndexBuffer } from "./buffer.js";
+import { createIndexBuffer } from "./buffer.js";
 
 function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
   // Clear the canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // Reinitialize the index buffer for the current visualization mode
-  buffers.indices = initIndexBuffer(gl, visualizationMode); // Update indices buffer
+  buffers.indices = createIndexBuffer(gl, visualizationMode); // Update indices buffer
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
   // Set up the projection matrix
