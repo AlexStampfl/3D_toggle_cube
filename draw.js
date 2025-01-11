@@ -4,6 +4,10 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, vis
   // Clear the canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+  // Reinitialize the index buffer for the current visualization mode
+  buffers.indices = initIndexBuffer(gl, visualizationMode); // Update indices buffer
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
+
   // Set up the projection matrix
   const fieldOfView = (65 * Math.PI) / 180;
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
@@ -19,16 +23,18 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, vis
   
   mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]); // Move cube into view
 
-  // Pass matrices to shaders
-  gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix);
-  gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix);
-
+  
   // Bind buffers and configure attributes
   configurePositionBuffer(gl, buffers, programInfo);
   configureColorBuffer(gl, buffers, programInfo);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
+  
+  // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
   
   gl.useProgram(programInfo.program);
+  
+  // Pass matrices to shaders
+  gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix);
+  gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix);
 
   console.log("Current visualization mode:", visualizationMode);
 

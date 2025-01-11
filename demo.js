@@ -1,4 +1,3 @@
-
 import { initBuffers, initIndexBuffer } from "./buffer.js";
 import { drawScene } from "./draw.js";
 import { initCameraControls, updateCamera } from "./camera.js";
