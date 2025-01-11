@@ -1,5 +1,5 @@
 function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective) {
-  gl.clearColor(.5, 0.5, .5, 1.0);
+  // gl.clearColor(.5, 0.5, .5, 1.0); // this was overriding demo.js code
   gl.clearDepth(1.0);
   gl.enable(gl.DEPTH_TEST);
   gl.depthFunc(gl.LEQUAL);
