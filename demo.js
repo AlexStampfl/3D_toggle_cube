@@ -1,5 +1,5 @@
 
-import { initBuffers } from "./buffer.js";
+import { initBuffers, initIndexBuffer } from "./buffer.js";
 import { drawScene } from "./draw.js";
 import { initCameraControls, updateCamera } from "./camera.js";
 import { initializeShaderProgram } from "./shader.js";
@@ -32,17 +32,25 @@ function main() {
   // compile and link the shader program
   const linkedShaderProgram = initializeShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
 
-  // Set up projection toggle
   let isPerspective = true;
-  document.getElementById("projectionToggle").addEventListener("change", (event) => {
+  let visualizationMode = "Wireframe"; // default mode
+
+  // Set up projection toggle
+  document.getElementById("perspectiveToggle").addEventListener("change", (event) => {
     isPerspective = event.target.value === "perspective";
   });
-
   // Visualization toggles
-  let visualizationMode = "Wireframe"; // default mode
   document.getElementById("visualToggle").addEventListener("change", (event) => {
     visualizationMode = event.target.value;
-    console.log("Visualization mode selected: ", visualizationMode);
+    buffers.indices = initIndexBuffer(gl, visualizationMode); // newly added at 8:49
+    console.log("Visualization mode changed to:", visualizationMode);
+
+    // buffers.indices = initIndexBuffer(gl, visualizationMode);
+    buffers = initBuffers(gl, visualizationMode);
+
+    // Trigger re-render with updated buffers
+    render(0, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode);
+
   });
 
   const colorSquare = [1.0, 1.0, 1.0, 1.0];
@@ -68,15 +76,13 @@ function main() {
 }
 
 let then = 0;
-function render(now, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode) {
+function render(now, gl, programInfo, buffers, cameraState, isPerspective, visualizationMode) {
   now *= 0.001;
   const deltaTime = now - then;
   then = now;
 
-  console.log("Before gl.clear() COLOR_CLEAR_VALUE:", gl.getParameter(gl.COLOR_CLEAR_VALUE));
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear each frame
-  console.log("Canvas cleared with color:", gl.getParameter(gl.COLOR_CLEAR_VALUE));
 
   const modelViewMatrix = mat4.create();
   updateCamera(cameraState, modelViewMatrix);
@@ -84,5 +90,5 @@ function render(now, gl, programInfo, buffers, cameraState, isPerspective, then,
 
   drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode);
 
-  requestAnimationFrame((newNow) => render(newNow, gl, programInfo, buffers, cameraState, isPerspective, then));
+  requestAnimationFrame((newNow) => render(newNow, gl, programInfo, buffers, cameraState, isPerspective, visualizationMode));
 }

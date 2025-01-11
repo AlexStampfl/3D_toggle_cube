@@ -30,7 +30,7 @@
     <br>
     <label>
       Projection:
-      <select id="projectionToggle">
+      <select id="perspectiveToggle">
         <option value="perspective">Perspective</option>
         <option value="orthographic">Orthographic</option>
       </select>
@@ -39,10 +39,10 @@
     <label>
       Visualization:
       <select id="visualToggle">
-        <option value="perspective">Wireframe</option>
-        <option value="orthographic">Solid</option>
-        <option value="orthographic">Flat-shading</option>
-        <option value="orthographic">Smooth-shading</option>
+        <option value="wireframe">Wireframe</option>
+        <option value="solid">Solid</option>
+        <option value="flat-shading">Flat-shading</option>
+        <option value="smooth-shading">Smooth-shading</option>
       </select>
     </label>
   </div>
@@ -68,9 +68,15 @@
     precision mediump float;
     varying lowp vec4 vColor;
     uniform vec4 uSquareColor;
+    uniform bool uWireframeMode; // New: Boolean to toggle wireframe mode
 
     void main(void) {
-      gl_FragColor = vColor;
+      //gl_FragColor = vColor;
+      if (uWireframeMode) {
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // White for wireframe
+      } else {
+        gl_FragColor = vColor; // Use vertex color
+      }
     }
   </script>
 </body>

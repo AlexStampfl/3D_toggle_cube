@@ -19,7 +19,7 @@ export function initCameraControls() {
         cameraState.phi = parseFloat(e.target.value) * Math.PI / 180;
     });
 
-    document.getElementById("projectionToggle").addEventListener("change", (event) => {
+    document.getElementById("perspectiveToggle").addEventListener("change", (event) => {
         cameraState.isPerspective = event.target.value === "perspective";
     });
 
