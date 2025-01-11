@@ -1,5 +1,47 @@
 import { createIndexBuffer } from "./buffer.js";
 
+
+function configurePositionBuffer(gl, buffers, programInfo) {
+  const numComponentsPerVertex = 3;
+  const dataType = gl.FLOAT;
+  const shouldNormalize = false;
+  const strideLength = 0;
+  const startOffset = 0;
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+  gl.vertexAttribPointer(
+    programInfo.attribLocations.vertexPosition,
+    numComponentsPerVertex,
+    dataType,
+    shouldNormalize,
+    strideLength,
+    startOffset,
+  );
+  gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+}
+
+// Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
+function configureColorBuffer(gl, buffers, programInfo) {
+  const numComponents = 4;
+  const dataType = gl.FLOAT;
+  const normalize = false;
+  const strideLength = 0;
+  const startOffset = 0;
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+  gl.vertexAttribPointer(
+    programInfo.attribLocations.vertexColor,
+    numComponents,
+    dataType,
+    normalize,
+    strideLength,
+    startOffset,
+  );
+  gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+}
+
+// setProjectionMatrix(gl, programInfo, isPerspective) 
+
+
+
 function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
   // Clear the canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -23,7 +65,6 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, vis
   
   mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]); // Move cube into view
 
-  
   // Bind buffers and configure attributes
   configurePositionBuffer(gl, buffers, programInfo);
   configureColorBuffer(gl, buffers, programInfo);
@@ -65,43 +106,6 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, vis
       gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
       break;
   }
-}
-
-function configurePositionBuffer(gl, buffers, programInfo) {
-  const numComponentsPerVertex = 3;
-  const dataType = gl.FLOAT;
-  const shouldNormalize = false;
-  const strideLength = 0;
-  const startOffset = 0;
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-  gl.vertexAttribPointer(
-    programInfo.attribLocations.vertexPosition,
-    numComponentsPerVertex,
-    dataType,
-    shouldNormalize,
-    strideLength,
-    startOffset,
-  );
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-}
-
-// Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
-function configureColorBuffer(gl, buffers, programInfo) {
-  const numComponents = 4;
-  const dataType = gl.FLOAT;
-  const normalize = false;
-  const strideLength = 0;
-  const startOffset = 0;
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
-  gl.vertexAttribPointer(
-    programInfo.attribLocations.vertexColor,
-    numComponents,
-    dataType,
-    normalize,
-    strideLength,
-    startOffset,
-  );
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
 }
 
 export { drawScene };
