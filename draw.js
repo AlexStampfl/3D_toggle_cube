@@ -1,4 +1,4 @@
-function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective) {
+function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
   // gl.clearColor(.5, 0.5, .5, 1.0); // this was overriding demo.js code
   gl.clearDepth(1.0);
   gl.enable(gl.DEPTH_TEST);
@@ -34,11 +34,26 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective) {
   gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix);
   gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix);
 
-  // Draw the cube
-  const vertexCount = 36;
-  const type = gl.UNSIGNED_SHORT;
-  const offset = 0;
-  gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
+  switch (visualizationMode) {
+    case "Wireframe":
+      gl.drawElements(gl.LINES, 48, gl.UNSIGNED_SHORT, 0);
+      break;
+    case "Solid":
+      gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+      break;
+    case "Flat-shading":
+      // Adjust shaders to use flat shading
+      gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+      break;
+    case "Smooth-shading":
+      // Adjust shaders
+      gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+      break;
+    default:
+      console.warn("Unknown visualization mode:", visualizationMode);
+      gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+      break;
+  }
 }
 
 function configurePositionBuffer(gl, buffers, programInfo) {

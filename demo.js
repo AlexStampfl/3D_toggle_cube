@@ -5,11 +5,8 @@ import { initCameraControls, updateCamera } from "./camera.js";
 import { initializeShaderProgram } from "./shader.js";
 
 let cubeRotation = 7.0;
-// let deltaTime = 3;
 
 main();
-// let then = 0;
-// let gl;
 
 function main() {
   const canvas = document.querySelector("#gl-canvas");
@@ -20,14 +17,8 @@ function main() {
   gl.disable(gl.BLEND);
   gl.enable(gl.DEPTH_TEST);
   gl.depthFunc(gl.LEQUAL); // use default depth test function
-  // gl.clearColor(1.0, 0.0, 0.0, 1.0); // Green background
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear immediately
   gl.viewport(0, 0, canvas.clientWidth, canvas.height); // Ensure proper viewport setup
-
-
-  // Set background color & clear canvas
-  // gl.clearColor(0.0, 1.0, 0, 1.0);
-  // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Debug: clear once at startup
 
   console.log("Clear Color (initial):", gl.getParameter(gl.COLOR_CLEAR_VALUE));
 
@@ -47,6 +38,13 @@ function main() {
     isPerspective = event.target.value === "perspective";
   });
 
+  // Visualization toggles
+  let visualizationMode = "Wireframe"; // default mode
+  document.getElementById("visualToggle").addEventListener("change", (event) => {
+    visualizationMode = event.target.value;
+    console.log("Visualization mode selected: ", visualizationMode);
+  });
+
   const colorSquare = [1.0, 1.0, 1.0, 1.0];
   const uSquareColorLocation = gl.getUniformLocation(linkedShaderProgram, 'uSquareColor');
   gl.useProgram(linkedShaderProgram);
@@ -64,15 +62,13 @@ function main() {
     },
   };
 
-  const buffers = initBuffers(gl);
-
+  const buffers = initBuffers(gl, visualizationMode);
 
   requestAnimationFrame((now) => render(now, gl, programInfo, buffers, cameraState, isPerspective, then));
-  // requestAnimationFrame(render);
 }
 
 let then = 0;
-function render(now, gl, programInfo, buffers, cameraState, isPerspective, then) {
+function render(now, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode) {
   now *= 0.001;
   const deltaTime = now - then;
   then = now;
@@ -86,7 +82,7 @@ function render(now, gl, programInfo, buffers, cameraState, isPerspective, then)
   updateCamera(cameraState, modelViewMatrix);
   mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]); // Move cube back
 
-  drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective);
+  drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode);
 
   requestAnimationFrame((newNow) => render(newNow, gl, programInfo, buffers, cameraState, isPerspective, then));
 }

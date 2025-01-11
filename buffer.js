@@ -1,7 +1,7 @@
-function initBuffers(gl) {
+function initBuffers(gl, mode) {
   const positionBuffer = initPositionBuffer(gl);
   const colorBuffer = initColorBuffer(gl);
-  const iBuffer = initIndexBuffer(gl);
+  const iBuffer = initIndexBuffer(gl, mode);
 
 return {
   position: positionBuffer,
@@ -65,18 +65,36 @@ function initColorBuffer(gl) {
   return cBuffer;
 }
 
-function initIndexBuffer(gl) {
+function initIndexBuffer(gl, mode) {
   const indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-  const indices = [
-    0, 1, 2, 0, 2, 3, // front
-    4, 5, 6, 4, 6, 7, // back
-    8, 9, 10, 8, 10, 11, // top
-    12, 13, 14, 12, 14, 15, // bottom
-    16, 17, 18, 16, 18, 19, // right
-    20, 21, 22, 20, 22, 23, // left
-  ];
+  let indices;
+  if (mode === "Wireframe") {
+    indices = [
+      0, 1, 2, 0, 2, 3, // front
+      4, 5, 6, 4, 6, 7, // back
+      8, 9, 10, 8, 10, 11, // top
+      12, 13, 14, 12, 14, 15, // bottom
+      16, 17, 18, 16, 18, 19, // right
+      20, 21, 22, 20, 22, 23, // left
+    ];
+  } else {
+    indices = [
+      // Front face
+      0, 1, 1, 2, 2, 3, 3, 0,
+      // Back face
+      4, 5, 5, 6, 6, 7, 7, 4,
+      // Top face
+      8, 9, 9, 10, 10, 11, 11, 8,
+      // Bottom face
+      12, 13, 13, 14, 14, 15, 15, 12,
+      // Right face
+      16, 17, 17, 18, 18, 19, 19, 16,
+      // Left face
+      20, 21, 21, 22, 22, 23, 23, 20,
+    ];
+  }
 
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
   return indexBuffer;
