@@ -24,21 +24,6 @@ export function createPositionBuffer(gl) {
   return buffer;
 }
 
-
-function initBuffers(gl, mode) {
-  const positionBuffer = createPositionBuffer(gl);
-  const colorBuffer = createColorBuffer(gl);
-  const iBuffer = createIndexBuffer(gl, mode);
-
-return {
-  position: positionBuffer,
-  color: colorBuffer,
-  indices: iBuffer,
-};
-
-}
-
-
 const scheme1 = [
   [0.0, 1.0, 1.0, 1.0], // Front face: cyan
   [1.0, 0.5, 0.0, 1.0], // Back face: orange
@@ -116,6 +101,19 @@ function createIndexBuffer(gl, mode) {
 
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
   return indexBuffer;
+}
+
+
+function initBuffers(gl, mode) {
+  const positionBuffer = createPositionBuffer(gl);
+  const colorBuffer = createColorBuffer(gl);
+  const iBuffer = createIndexBuffer(gl, mode);
+
+return {
+  position: positionBuffer,
+  color: colorBuffer,
+  indices: iBuffer,
+};
 }
 
 export { initBuffers, createIndexBuffer };
