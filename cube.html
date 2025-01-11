@@ -37,12 +37,11 @@
     </label>
     <br>
     <label>
-      Visualization:
-      <select id="visualToggle">
-        <option value="wireframe">Wireframe</option>
-        <option value="solid">Solid</option>
-        <option value="flat-shading">Flat-shading</option>
-        <option value="smooth-shading">Smooth-shading</option>
+      Colors:
+      <select id="colorToggle">
+        <option value="scheme1">Scheme 1</option>
+        <option value="scheme2">Scheme 2</option>
+        <option value="scheme3">Scheme 3</option>
       </select>
     </label>
   </div>
@@ -71,12 +70,7 @@
     uniform bool uWireframeMode; // New: Boolean to toggle wireframe mode
 
     void main(void) {
-      //gl_FragColor = vColor;
-      if (uWireframeMode) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // White for wireframe
-      } else {
-        gl_FragColor = vColor; // Use vertex color
-      }
+      gl_FragColor = vColor;
     }
   </script>
 </body>

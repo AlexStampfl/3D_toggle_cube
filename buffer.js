@@ -8,9 +8,10 @@ return {
   color: colorBuffer,
   indices: iBuffer,
 };
+
 }
 
-function initPositionBuffer(gl) {
+export function initPositionBuffer(gl) {
   // Create a buffer for the square's positions.
   const pBuffer = gl.createBuffer();
 
@@ -38,26 +39,43 @@ function initPositionBuffer(gl) {
   return pBuffer;
 }
 
-function initColorBuffer(gl) {
+const scheme1 = [
+  [0.0, 1.0, 1.0, 1.0], // Front face: cyan
+  [1.0, 0.5, 0.0, 1.0], // Back face: orange
+  [0.0, 1.0, 0.0, 1.0], // Top face: green
+  [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
+  [1.0, 1.0, 0.0, 1.0], // Right face: yellow
+  [1.0, 0.0, 1.0, 1.0], // Left face: purple
+],
+scheme2 = [
+  [0.5, 0.5, 0.5, 1.0], // Gray
+  [0.8, 0.4, 0.0, 1.0], // Orange
+  [0.3, 0.7, 0.0, 1.0], // Olive
+  [0.6, 0.2, 0.8, 1.0], // Purple
+  [0.2, 0.8, 0.6, 1.0], // Aqua
+  [1.0, 1.0, 1.0, 1.0], // White
+],
+scheme3 = [
+  [1.0, 0.4, 0.4, 1.0], // Light Red
+  [0.4, 1.0, 0.4, 1.0], // Light Green
+  [0.4, 0.4, 1.0, 1.0], // Light Blue
+  [1.0, 1.0, 0.4, 1.0], // Light Yellow
+  [1.0, 0.4, 1.0, 1.0], // Light Magenta
+  [0.4, 1.0, 1.0, 1.0], // Light Cyan
+];
 
-  const faceColors = [
-    [0.0, 1.0, 1.0, 1.0], // Front face: cyan
-    [1.0, 0.5, 0.0, 1.0], // Back face: orange
-    [0.0, 1.0, 0.0, 1.0], // Top face: green
-    [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
-    [1.0, 1.0, 0.0, 1.0], // Right face: yellow
-    [1.0, 0.0, 1.0, 1.0], // Left face: purple
-  ];
-  
+export const colorSchemes = { scheme1, scheme2, scheme3 };
+
+
+export function initColorBuffer(gl, colorScheme) {
   // Convert the array of colors into a table for all the vertices.
-  var colors = [];
+  let colors = [];
   
-  for (var j = 0; j < faceColors.length; ++j) {
-    const c = faceColors[j];
-    // Repeat each color four times for the four vertices of the face
-    colors = colors.concat(c, c, c, c);
+  for (const color of colorScheme) {
+    colors = colors.concat(color, color, color, color); // Repeat for each face
   }
 
+  // Create and populate the color buffer
   const cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);

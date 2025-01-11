@@ -2,6 +2,8 @@ import { initBuffers, initIndexBuffer } from "./buffer.js";
 import { drawScene } from "./draw.js";
 import { initCameraControls, updateCamera } from "./camera.js";
 import { initializeShaderProgram } from "./shader.js";
+import { initColorBuffer, colorSchemes } from "./buffer.js";
+import { initPositionBuffer } from "./buffer.js";
 
 let cubeRotation = 7.0;
 
@@ -33,23 +35,28 @@ function main() {
 
   let isPerspective = true;
   let visualizationMode = "Wireframe"; // default mode
+  let buffers = {
+    position: initPositionBuffer(gl),
+    color: initColorBuffer(gl, colorSchemes.scheme1),
+    indices: initIndexBuffer(gl),
+  };
 
   // Set up projection toggle
   document.getElementById("perspectiveToggle").addEventListener("change", (event) => {
     isPerspective = event.target.value === "perspective";
   });
-  // Visualization toggles
-  document.getElementById("visualToggle").addEventListener("change", (event) => {
-    visualizationMode = event.target.value;
-    buffers.indices = initIndexBuffer(gl, visualizationMode); // newly added at 8:49
-    console.log("Visualization mode changed to:", visualizationMode);
 
-    // buffers.indices = initIndexBuffer(gl, visualizationMode);
-    buffers = initBuffers(gl, visualizationMode);
-
-    // Trigger re-render with updated buffers
-    render(0, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode);
-
+  // color toggles
+  document.getElementById("colorToggle").addEventListener("change", (event) => {
+    // const selectedScheme = event.target.value;
+    const selectedScheme = colorSchemes[event.target.value];
+    if (selectedScheme) {
+      console.log(`Switching to color scheme: ${event.target.value}`);
+      buffers.color = initColorBuffer(gl, selectedScheme);
+      render(0, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode);
+    } else {
+      console.error(`Uknown color scheme: ${event.target.value}`);
+    }
   });
 
   const colorSquare = [1.0, 1.0, 1.0, 1.0];
@@ -68,8 +75,6 @@ function main() {
       modelViewMatrix: gl.getUniformLocation(linkedShaderProgram, "uModelViewMatrix"),
     },
   };
-
-  const buffers = initBuffers(gl, visualizationMode);
 
   requestAnimationFrame((now) => render(now, gl, programInfo, buffers, cameraState, isPerspective, then));
 }
