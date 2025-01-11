@@ -1,4 +1,4 @@
-export function createPositionBuffer(gl) {
+export function makeStanceBuf(gl) {
   // Create a buffer for the square's positions.
   const buffer = gl.createBuffer();
 
@@ -6,31 +6,31 @@ export function createPositionBuffer(gl) {
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
   // Now create an array of positions for the square.
-  const positions = [
-    // Front face
+  const stances = [
+    // Front side
     -1.0, -1.0,  1.0, 1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0,
-    // Back face
+    // Rear side
     -1.0, -1.0, -1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0, 1.0, -1.0, -1.0,
-    // Top face
+    // Top side
     -1.0,  1.0, -1.0, -1.0,  1.0,  1.0, 1.0,  1.0,  1.0, 1.0,  1.0, -1.0,
-    // Bottom face
+    // Bottom side
     -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0,  1.0, -1.0, -1.0,  1.0,
-    // Right face
+    // Right side
     1.0, -1.0, -1.0, 1.0,  1.0, -1.0, 1.0,  1.0,  1.0, 1.0, -1.0,  1.0,
-    // Left face
+    // Left side
     -1.0, -1.0, -1.0, -1.0, -1.0,  1.0, -1.0,  1.0,  1.0, -1.0,  1.0, -1.0,
   ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(stances), gl.STATIC_DRAW);
   return buffer;
 }
 
 const scheme1 = [
-  [0.0, 1.0, 1.0, 1.0], // Front face: cyan
-  [1.0, 0.5, 0.0, 1.0], // Back face: orange
-  [0.0, 1.0, 0.0, 1.0], // Top face: green
-  [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
-  [1.0, 1.0, 0.0, 1.0], // Right face: yellow
-  [1.0, 0.0, 1.0, 1.0], // Left face: purple
+  [0.0, 1.0, 1.0, 1.0], // Front side: cyan
+  [1.0, 0.5, 0.0, 1.0], // Back side: orange
+  [0.0, 1.0, 0.0, 1.0], // Top side: green
+  [0.0, 0.0, 1.0, 1.0], // Bottom side: blue
+  [1.0, 1.0, 0.0, 1.0], // Right side: yellow
+  [1.0, 0.0, 1.0, 1.0], // Left side: purple
 ],
 scheme2 = [
   [0.5, 0.5, 0.5, 1.0], // Gray
@@ -56,7 +56,7 @@ export function createColorBuffer(gl, colorScheme) {
   // Convert the array of colors into a table for all the vertices.
   let colors = [];
   for (const color of colorScheme) {
-    colors = colors.concat(color, color, color, color); // Repeat for each face
+    colors = colors.concat(color, color, color, color); // Repeat for each side
   }
   // Create and populate the color buffer
   const cBuffer = gl.createBuffer();
@@ -74,17 +74,17 @@ function createIndexBuffer(gl, mode) {
   if (mode === "Wireframe") {
     indices = [
       // Wireframe mode indices
-      // Front face
+      // Front side
       0, 1, 1, 2, 2, 3, 3, 0,
-      // Back face
+      // Back side
       4, 5, 5, 6, 6, 7, 7, 4,
-      // Top face
+      // Top side
       8, 9, 9, 10, 10, 11, 11, 8,
-      // Bottom face
+      // Bottom side
       12, 13, 13, 14, 14, 15, 15, 12,
-      // Right face
+      // Right side
       16, 17, 17, 18, 18, 19, 19, 16,
-      // Left face
+      // Left side
       20, 21, 21, 22, 22, 23, 23, 20,
     ];
   } else {
@@ -105,7 +105,7 @@ function createIndexBuffer(gl, mode) {
 
 
 function initBuffers(gl, mode) {
-  const positionBuffer = createPositionBuffer(gl);
+  const positionBuffer = makeStanceBuf(gl);
   const colorBuffer = createColorBuffer(gl);
   const iBuffer = createIndexBuffer(gl, mode);
 

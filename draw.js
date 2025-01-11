@@ -1,38 +1,38 @@
 import { createIndexBuffer } from "./buffer.js";
 
 
-function configurePositionBuffer(gl, buffers, programInfo) {
+function setupPosBuf(gl, buffers, programInfo) {
   const numComponentsPerVertex = 3;
-  const dataType = gl.FLOAT;
-  const shouldNormalize = false;
-  const strideLength = 0;
+  const dType = gl.FLOAT;
+  const shudNorm = false;
+  const strideLen = 0;
   const startOffset = 0;
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
   gl.vertexAttribPointer(
     programInfo.attribLocations.vertexPosition,
     numComponentsPerVertex,
-    dataType,
-    shouldNormalize,
-    strideLength,
+    dType,
+    shudNorm,
+    strideLen,
     startOffset,
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 }
 
-// Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
-function configureColorBuffer(gl, buffers, programInfo) {
-  const numComponents = 4;
-  const dataType = gl.FLOAT;
-  const normalize = false;
-  const strideLength = 0;
+// Show WebGL to take out colors from colorbuffer into vertexColor attribute.
+function setupColBuf(gl, buffers, programInfo) {
+  const numComp = 4;
+  const dType = gl.FLOAT;
+  const norm = false;
+  const strydLen = 0;
   const startOffset = 0;
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
   gl.vertexAttribPointer(
     programInfo.attribLocations.vertexColor,
-    numComponents,
-    dataType,
-    normalize,
-    strideLength,
+    numComp,
+    dType,
+    norm,
+    strydLen,
     startOffset,
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
@@ -42,7 +42,7 @@ function configureColorBuffer(gl, buffers, programInfo) {
 
 
 
-function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
+function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
   // Clear the canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -66,8 +66,8 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, vis
   mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]); // Move cube into view
 
   // Bind buffers and configure attributes
-  configurePositionBuffer(gl, buffers, programInfo);
-  configureColorBuffer(gl, buffers, programInfo);
+  setupPosBuf(gl, buffers, programInfo);
+  setupColBuf(gl, buffers, programInfo);
   
   // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
   
@@ -108,4 +108,4 @@ function drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, vis
   }
 }
 
-export { drawScene };
+export { sketchScene };

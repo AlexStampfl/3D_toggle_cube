@@ -1,9 +1,9 @@
 import { initBuffers, createIndexBuffer } from "./buffer.js";
-import { drawScene } from "./draw.js";
+import { sketchScene } from "./draw.js";
 import { initCameraControls, updateCamera } from "./camera.js";
 import { initializeShaderProgram } from "./shader.js";
 import { createColorBuffer, colorSchemes } from "./buffer.js";
-import { createPositionBuffer } from "./buffer.js";
+import { makeStanceBuf } from "./buffer.js";
 
 let cubeRotation = 7.0;
 
@@ -36,7 +36,7 @@ function main() {
   let isPerspective = true;
   let visualizationMode = "Wireframe"; // default mode
   let buffers = {
-    position: createPositionBuffer(gl),
+    position: makeStanceBuf(gl),
     color: createColorBuffer(gl, colorSchemes.scheme1),
     indices: createIndexBuffer(gl),
   };
@@ -92,7 +92,7 @@ function render(now, gl, programInfo, buffers, cameraState, isPerspective, visua
   updateCamera(cameraState, modelViewMatrix);
   mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]); // Move cube back
 
-  drawScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode);
+  sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode);
 
   requestAnimationFrame((newNow) => render(newNow, gl, programInfo, buffers, cameraState, isPerspective, visualizationMode));
 }
