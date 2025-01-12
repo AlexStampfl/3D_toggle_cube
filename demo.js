@@ -58,6 +58,21 @@ function main() {
     }
   });
 
+  // canvas listener
+  canvas.addEventListener("click", (event) => {
+    console.log(`Canvas clicked!`);
+    hightlightFace(gl, buffers, 0);
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clienty - rect.top;
+
+    console.log(`Mouse clicked at: (${x}, ${y})`);
+    hightlightFace(gl, x, y, buffers, programInfo);
+  });
+
+  
+
   const colorSquare = [1.0, 1.0, 1.0, 1.0];
   const uSquareColorLocation = gl.getUniformLocation(linkedShaderProgram, 'uSquareColor');
   gl.useProgram(linkedShaderProgram);
@@ -76,6 +91,23 @@ function main() {
   };
 
   requestAnimationFrame((now) => render(now, gl, programInfo, buffers, cameraState, isPerspective, then));
+}
+
+function hightlightFace(gl, x, y, buffers, programInfo) {
+  const faceToHighlight = 0;
+
+  const highlightColor = [1.0, 1.0, 0.0, 1.0];
+  const currentColors = buffers.color;
+
+  // update color buffer w/highlight for specified side
+  for (let i = faceToHighlight * 4; i < faceToHighlight * 4 + 4; i++) {
+    currentColors[i] = highlightColor;
+  }
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(currentColors), gl.STATIC_DRAW);
+
+  render(0, gl, programInfo, buffers, cameraState, isPerspective, visualizationMode);
 }
 
 let then = 0;

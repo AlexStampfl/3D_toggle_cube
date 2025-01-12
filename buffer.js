@@ -52,10 +52,12 @@ scheme3 = [
 export const colorSchemes = { scheme1, scheme2, scheme3 };
 
 
-export function makeColBuf(gl, colorScheme) {
+export function makeColBuf(gl, colorScheme, highlightIndex = -1) {
   // Convert the array of colors into a table for all the vertices.
   let colors = [];
-  for (const color of colorScheme) {
+
+  for (let i = 0; i < colorScheme.length; i++) {
+    const color = i === highlightIndex ? [1.0, 1.0, 0.0, 1.0] : colorScheme[i];
     colors = colors.concat(color, color, color, color); // Repeat for each side
   }
   // Create and populate the color buffer
