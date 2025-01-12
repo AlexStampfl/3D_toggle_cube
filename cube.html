@@ -56,10 +56,8 @@
   <script id="vertex-shader" type="x-shader/x-vertex">
     attribute vec4 aVertexPosition;
     attribute vec4 aVertexColor;
-    attribute vec2 aTexCoord;
 
     varying lowp vec4 vColor;
-    varying highp vec2 vTexCoord;
     
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
@@ -67,7 +65,6 @@
     void main(void) {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       vColor = aVertexColor;
-      vTexCoord = aTexCoord;
     }
   </script>
   <script id="fragment-shader" type="x-shader/x-fragment">
@@ -82,9 +79,7 @@
     uniform bool uWireframeMode; // New: Boolean to toggle wireframe mode
 
     void main(void) {
-      //gl_FragColor = vColor;
-      vec4 textColor = texture2D(uTexture, vTexCoord);
-      gl_FragColor = mix(vColor, textColor, 0.5);
+      gl_FragColor = vColor;
     }
   </script>
 </body>
