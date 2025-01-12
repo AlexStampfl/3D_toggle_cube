@@ -2,19 +2,19 @@ import { makeiBuf } from "./buffer.js";
 
 
 function setupPosBuf(gl, buffers, programInfo) {
-  const numComponentsPerVertex = 3;
+  const numCompPerVert = 3;
   const dType = gl.FLOAT;
   const shudNorm = false;
-  const strideLen = 0;
-  const startOffset = 0;
+  const strydLen = 0;
+  const beginOffset = 0;
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
   gl.vertexAttribPointer(
     programInfo.attribLocations.vertexPosition,
-    numComponentsPerVertex,
+    numCompPerVert,
     dType,
     shudNorm,
-    strideLen,
-    startOffset,
+    strydLen,
+    beginOffset,
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
 }
@@ -25,7 +25,7 @@ function setupColBuf(gl, buffers, programInfo) {
   const dType = gl.FLOAT;
   const norm = false;
   const strydLen = 0;
-  const startOffset = 0;
+  const beginOffset = 0;
   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
   gl.vertexAttribPointer(
     programInfo.attribLocations.vertexColor,
@@ -33,14 +33,10 @@ function setupColBuf(gl, buffers, programInfo) {
     dType,
     norm,
     strydLen,
-    startOffset,
+    beginOffset,
   );
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
 }
-
-// setProjectionMatrix(gl, programInfo, isPerspective) 
-
-
 
 function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
   // Clear the canvas
@@ -51,14 +47,14 @@ function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, v
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
   // Set up the projection matrix
-  const fieldOfView = (65 * Math.PI) / 180;
-  const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+  const fieldOfVue = (65 * Math.PI) / 180;
+  const asp = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
   const zFar = 100.0;
 
   const projectionMatrix = mat4.create();
   if (isPerspective) {
-    mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
+    mat4.perspective(projectionMatrix, fieldOfVue, asp, zNear, zFar);
   } else {
     mat4.ortho(projectionMatrix, -3, 3, -3, 3, zNear, zFar);
   }

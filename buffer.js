@@ -1,11 +1,11 @@
 export function makeStanceBuf(gl) {
   // Create a buffer for the square's positions.
-  const buffer = gl.createBuffer();
+  const buf = gl.createBuffer();
 
   // Select the positionBuffer as the one to apply buffer operations to from here out.
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
 
-  // Now create an array of positions for the square.
+  // Make array of locations for cube.
   const stances = [
     // Front side
     -1.0, -1.0,  1.0, 1.0, -1.0,  1.0, 1.0,  1.0,  1.0, -1.0,  1.0,  1.0,
@@ -21,7 +21,7 @@ export function makeStanceBuf(gl) {
     -1.0, -1.0, -1.0, -1.0, -1.0,  1.0, -1.0,  1.0,  1.0, -1.0,  1.0, -1.0,
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(stances), gl.STATIC_DRAW);
-  return buffer;
+  return buf;
 }
 
 const scheme1 = [
@@ -59,10 +59,10 @@ export function makeColBuf(gl, colorScheme) {
     colors = colors.concat(color, color, color, color); // Repeat for each side
   }
   // Create and populate the color buffer
-  const cBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+  const cBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, cBuf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-  return cBuffer;
+  return cBuf;
 }
 
 
@@ -104,15 +104,15 @@ function makeiBuf(gl, mode) {
 }
 
 
-function makeBuf(gl, mode) {
+function makeBuf(gl, mode, colorScheme) {
   const posBuf = makeStanceBuf(gl);
-  const colorBuf = makeColBuf(gl);
+  const colorBuf = makeColBuf(gl, colorScheme);
   const iBuf = makeiBuf(gl, mode);
 
 return {
-  position: posBuf,
+  pos: posBuf,
   color: colorBuf,
-  indices: iBuf,
+  i: iBuf,
 };
 }
 

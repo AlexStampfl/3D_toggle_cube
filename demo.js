@@ -48,11 +48,10 @@ function main() {
 
   // color toggles
   document.getElementById("colorToggle").addEventListener("change", (event) => {
-    // const selectedScheme = event.target.value;
     const selectedScheme = colorSchemes[event.target.value];
     if (selectedScheme) {
       console.log(`Switching to color scheme: ${event.target.value}`);
-      buffers.color = createColorBuffer(gl, selectedScheme);
+      buffers.color = makeColBuf(gl, selectedScheme);
       render(0, gl, programInfo, buffers, cameraState, isPerspective, then, visualizationMode);
     } else {
       console.error(`Uknown color scheme: ${event.target.value}`);
