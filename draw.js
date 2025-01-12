@@ -38,7 +38,7 @@ function setupColBuf(gl, buffers, programInfo) {
   gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
 }
 
-function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode) {
+function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, visualizationMode, radius) {
   // Clear the canvas
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -47,14 +47,18 @@ function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, v
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
   // Set up the projection matrix
-  const fieldOfVue = (65 * Math.PI) / 180;
+  const fieldOfVue = (75 * Math.PI) / 180;
   const asp = gl.canvas.clientWidth / gl.canvas.clientHeight;
   const zNear = 0.1;
   const zFar = 100.0;
 
   const projectionMatrix = mat4.create();
   if (isPerspective) {
-    mat4.perspective(projectionMatrix, fieldOfVue, asp, zNear, zFar);
+    // Dynamically adjust
+    const dynamicNear = Math.max(0.1, radius - 2);
+    const dynamicFar = Math.min(100.0, radius + 2);
+
+    mat4.perspective(projectionMatrix, fieldOfVue, asp, zNear, zFar, dynamicFar, dynamicNear);
   } else {
     mat4.ortho(projectionMatrix, -3, 3, -3, 3, zNear, zFar);
   }

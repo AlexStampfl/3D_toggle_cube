@@ -60,15 +60,21 @@ function main() {
 
   // canvas listener
   canvas.addEventListener("click", (event) => {
-    console.log(`Canvas clicked!`);
-    hightlightFace(gl, buffers, 0);
-    
     const rect = canvas.getBoundingClientRect();
+    
+    highlightFace(gl, buffers, 0);
+    
+    // Get mouse position relative to canvas
     const x = event.clientX - rect.left;
-    const y = event.clienty - rect.top;
+    const y = event.clientY - rect.top;
 
-    console.log(`Mouse clicked at: (${x}, ${y})`);
-    hightlightFace(gl, x, y, buffers, programInfo);
+    const canvasX = (x / canvas.width) * 2 -1;
+    const canvasY = ((canvas.height - y) / canvas.height) * 2 - 1;
+
+    console.log(`Canvas clicked! WebGL coordinates: (${canvasX}, ${canvasY})`);
+    checkIntersection(canvasX, canvasY);
+
+    highlightFace(gl, x, y, buffers, programInfo);
   });
 
   
@@ -93,11 +99,22 @@ function main() {
   requestAnimationFrame((now) => render(now, gl, programInfo, buffers, cameraState, isPerspective, then));
 }
 
-function hightlightFace(gl, x, y, buffers, programInfo) {
+function highlightFace(gl, x, y, buffers, programInfo) {
   const faceToHighlight = 0;
 
   const highlightColor = [1.0, 1.0, 0.0, 1.0];
   const currentColors = buffers.color;
+
+  switch (face) {
+    case "front":
+      newColors[0] = highlightColor;
+      break;
+    default:
+      console.log("Unknown face:", face);
+      return;
+  }
+
+  buffers.color = makeColBuf(gl, newColors);
 
   // update color buffer w/highlight for specified side
   for (let i = faceToHighlight * 4; i < faceToHighlight * 4 + 4; i++) {
@@ -108,6 +125,36 @@ function hightlightFace(gl, x, y, buffers, programInfo) {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(currentColors), gl.STATIC_DRAW);
 
   render(0, gl, programInfo, buffers, cameraState, isPerspective, visualizationMode);
+}
+
+function checkIntersection(canvasX, canvasY) {
+  const cubeBounds = {
+    minX: -1,
+    maxX: 1,
+    minY: -1,
+    maxY: 1,
+    minZ: -1,
+    maxZ: 1,
+  };
+
+  const rayOrigin = [canvasX, canvasY, -1]; // Camera Origin
+  const rayDirection = [0, 0, 1];
+
+  const t = (cubeBounds.max2 - rayOrigin[2]) / rayDirection[2];
+  const hitX = rayOrigin[0] + t * rayDirection[0];
+  const hitY = rayOrigin[1] + t * rayDirection[1];
+
+  if (
+    hitX >= cubeBounds.minX &&
+    hitX <= cubeBounds.maxX &&
+    hitY >= cubeBounds.minY &&
+    hitY <= cubeBounds.maxY
+  ) {
+    console.log("Hit detected on the front face of the cube!");
+    highlightFace("front"); // Function to visually highlight the face
+  } else {
+    console.log("No hit detected.");
+  }
 }
 
 let then = 0;
