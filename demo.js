@@ -1,8 +1,8 @@
-import { initBuffers, createIndexBuffer } from "./buffer.js";
+import { makeBuf, makeiBuf } from "./buffer.js";
 import { sketchScene } from "./draw.js";
 import { initCameraControls, updateCamera } from "./camera.js";
 import { initializeShaderProgram } from "./shader.js";
-import { createColorBuffer, colorSchemes } from "./buffer.js";
+import { makeColBuf, colorSchemes } from "./buffer.js";
 import { makeStanceBuf } from "./buffer.js";
 
 let cubeRotation = 7.0;
@@ -37,8 +37,8 @@ function main() {
   let visualizationMode = "Wireframe"; // default mode
   let buffers = {
     position: makeStanceBuf(gl),
-    color: createColorBuffer(gl, colorSchemes.scheme1),
-    indices: createIndexBuffer(gl),
+    color: makeColBuf(gl, colorSchemes.scheme1),
+    indices: makeiBuf(gl),
   };
 
   // Set up projection toggle

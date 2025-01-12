@@ -1,4 +1,4 @@
-import { createIndexBuffer } from "./buffer.js";
+import { makeiBuf } from "./buffer.js";
 
 
 function setupPosBuf(gl, buffers, programInfo) {
@@ -47,7 +47,7 @@ function sketchScene(gl, programInfo, buffers, modelViewMatrix, isPerspective, v
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // Reinitialize the index buffer for the current visualization mode
-  buffers.indices = createIndexBuffer(gl, visualizationMode); // Update indices buffer
+  buffers.indices = makeiBuf(gl, visualizationMode); // Update indices buffer
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
   // Set up the projection matrix

@@ -25,12 +25,12 @@ export function makeStanceBuf(gl) {
 }
 
 const scheme1 = [
-  [0.0, 1.0, 1.0, 1.0], // Front side: cyan
-  [1.0, 0.5, 0.0, 1.0], // Back side: orange
-  [0.0, 1.0, 0.0, 1.0], // Top side: green
-  [0.0, 0.0, 1.0, 1.0], // Bottom side: blue
-  [1.0, 1.0, 0.0, 1.0], // Right side: yellow
-  [1.0, 0.0, 1.0, 1.0], // Left side: purple
+  [0.0, 1.0, 1.0, 1.0], // Front side
+  [1.0, 0.5, 0.0, 1.0], // Rear side
+  [0.0, 1.0, 0.0, 1.0], // Over side
+  [0.0, 0.0, 1.0, 1.0], // Back side
+  [1.0, 1.0, 0.0, 1.0], // Right side
+  [1.0, 0.0, 1.0, 1.0], // Left side
 ],
 scheme2 = [
   [0.5, 0.5, 0.5, 1.0], // Gray
@@ -52,7 +52,7 @@ scheme3 = [
 export const colorSchemes = { scheme1, scheme2, scheme3 };
 
 
-export function createColorBuffer(gl, colorScheme) {
+export function makeColBuf(gl, colorScheme) {
   // Convert the array of colors into a table for all the vertices.
   let colors = [];
   for (const color of colorScheme) {
@@ -66,9 +66,9 @@ export function createColorBuffer(gl, colorScheme) {
 }
 
 
-function createIndexBuffer(gl, mode) {
-  const indexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+function makeiBuf(gl, mode) {
+  const iBuf = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, iBuf);
   
   let indices;
   if (mode === "Wireframe") {
@@ -100,20 +100,20 @@ function createIndexBuffer(gl, mode) {
   }
 
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-  return indexBuffer;
+  return iBuf;
 }
 
 
-function initBuffers(gl, mode) {
-  const positionBuffer = makeStanceBuf(gl);
-  const colorBuffer = createColorBuffer(gl);
-  const iBuffer = createIndexBuffer(gl, mode);
+function makeBuf(gl, mode) {
+  const posBuf = makeStanceBuf(gl);
+  const colorBuf = makeColBuf(gl);
+  const iBuf = makeiBuf(gl, mode);
 
 return {
-  position: positionBuffer,
-  color: colorBuffer,
-  indices: iBuffer,
+  position: posBuf,
+  color: colorBuf,
+  indices: iBuf,
 };
 }
 
-export { initBuffers, createIndexBuffer };
+export { makeBuf, makeiBuf };
